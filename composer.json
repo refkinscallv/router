@@ -1,7 +1,7 @@
 {
     "name": "refkinscallv/router",
     "description": "a Simple PHP Router",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -16,7 +16,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^8.0"
+        "php": ">=7.4"
     },
     "config": {
         "platform": {

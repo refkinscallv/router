@@ -101,7 +101,33 @@ Route::get('', [RF\Page\DefaultPage::class, 'index']);
 - `Route::patch` - PATCH request
 - `Route::options` - OPTIONS request
 
-### 4. Route Groups
+### 4. Route with Parameters
+
+Define routes with optional or required parameters. Optional parameters are denoted with a `?` in the route pattern, indicating that the parameter is not required and can be omitted in the URL.
+
+#### Example
+
+Define a route with an optional parameter:
+
+```php
+Route::get('/param/{id?}', function($id) {
+    echo 'Add param: ' . ($id ? $id : 'No parameter provided');
+});
+```
+
+#### Usage
+
+- **With Parameter:**
+
+  URL: `/param/123`  
+  Output: `Add param: 123`
+
+- **Without Parameter:**
+
+  URL: `/param`  
+  Output: `Add param: No parameter provided`
+
+### 5. Route Groups
 
 Group routes under a common prefix:
 

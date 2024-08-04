@@ -1,6 +1,5 @@
 <?php
 
-    // Importing Library
     use RF\Router\Route;
 
     // Autoload dependencies
@@ -50,6 +49,7 @@
      * 3. Basic Route Usage
      * 
      * Define routes with different HTTP methods:
+     * - Route::set
      * - Route::get
      * - Route::post
      * - Route::put
@@ -68,7 +68,25 @@
     // Route::get('', [RF\Page\DefaultPage::class, 'index']);
 
     /**
-     * 4. Route Groups
+     * 4. Route with Parameters
+     * 
+     * Define routes with optional or required parameters. Optional parameters are denoted with a `?` in the route pattern.
+     * 
+     * Example:
+     * Route::get('/param/{id?}', function($id) {
+     *     echo 'Add param: ' . ($id ? $id : 'No parameter provided');
+     * });
+     */
+    Route::get('/param/{id?}', function($id) {
+        echo 'Add param: ' . ($id ? $id : 'No parameter provided');
+    });
+
+    // Alternatively, use a PHP file or class method
+    // require 'example/page/param.php';
+    // Route::get('/param/{id?}', [RF\Page\ParamPage::class, 'index']);
+
+    /**
+     * 5. Route Groups
      * 
      * Group routes under a common prefix.
      */
