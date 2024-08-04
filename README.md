@@ -11,7 +11,7 @@ The RF PHP Routing Library provides a flexible and easy-to-use routing system fo
    Make sure you have Composer installed. Run the following command to add the RF PHP Routing Library to your project:
 
    ```bash
-   composer require rf/router
+   composer require refkinscallv/router
    ```
 
 2. **Autoload Dependencies**
