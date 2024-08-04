@@ -1,11 +1,11 @@
 {
     "name": "refkinscallv/router",
     "description": "a Simple PHP Router",
-    "version": "1.0.0-dev",
+    "version": "1.0.0",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "RF\\Router\\": "src/"
+            "RF\\Router\\": "src/Router"
         }
     },
     "authors": [
@@ -14,6 +14,13 @@
             "email": "refkinscallv@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {}
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.0"
+    },
+    "config": {
+        "platform": {
+            "php": "8.0.0"
+        }
+    }
 }

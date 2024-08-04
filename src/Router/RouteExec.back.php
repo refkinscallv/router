@@ -49,8 +49,8 @@
             $params = [];
             foreach ($routeParts as $index => $part) {
                 if (strpos($part, '{') === 0 && strpos($part, '}') === strlen($part) - 1) {
-                    $params[] = $uriParts[$index] ?? '';
-                } elseif ($part !== ($uriParts[$index])) {
+                    $params[] = $uriParts[$index];
+                } else if ($part !== ($uriParts[$index])) {
                     return false;
                 }
             }

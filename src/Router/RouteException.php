@@ -18,7 +18,7 @@
         }
 
         public function __toString() {
-            return __CLASS__ ."[{$this->code}: {$this->message} - Details : {$this->details}\n]";
+            return __CLASS__ ." [{$this->code}: {$this->message} - Details : {$this->details}\n]";
         }
         
     }

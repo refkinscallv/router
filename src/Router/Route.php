@@ -10,15 +10,18 @@
 
         private static array $storage = [];
         private static string $prefix = '';
-        private static array $routeRegis = [];
         private static string $errMessage = 'Router an Error Occurred';
 
-        public static function config(array $args = []): void {
+        public static function register(array $args = []): void {
             if (!is_array($args)) {
-                throw new RouteException(self::$errMessage, 1, null, "Config arguments aren't array");
+                throw new RouteException(self::$errMessage, 1, null, "'register' arguments aren't array");
             }
-
-            self::$routeRegis = $args['routeRegis'] ?? [];
+            
+            if(!empty($args)) {
+                foreach($args as $file) {
+                    require $file .".php";
+                }
+            }
         }
 
         public static function setMaintenance($classOrFunc) {
