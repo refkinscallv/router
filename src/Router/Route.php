@@ -2,88 +2,95 @@
 
     namespace RF\Router;
 
-    use RF\Router\RouteCollect;
-    use RF\Router\RouteExec;
-    use RF\Router\RouteException;
+    use RF\Router\RouteCollect as Collect;
+    use RF\Router\RouteExecution as Execution;
 
     class Route {
 
-        private static array $storage = [];
-        private static string $prefix = '';
-        private static string $errMessage = 'Router an Error Occurred';
+        private static $storage = [];
+        private static $prefix = "";
+        private static $groupMiddleware = [];
 
-        public static function register(array $args = []): void {
-            if (!is_array($args)) {
-                throw new RouteException(self::$errMessage, 1, null, "'register' arguments aren't array");
-            }
-            
-            if(!empty($args)) {
-                foreach($args as $file) {
-                    require $file .".php";
+        public static function register(array $list = []) {
+            if (!empty($list)) {
+                foreach ($list as $val) {
+                    $filePath = $_SERVER["DOCUMENT_ROOT"] . "/app/Routes" . $val . ".php";
+                    if (file_exists($filePath)) {
+                        require $filePath;
+                    } else {
+                        throw new \Exception("Route file '{$val}.php' not found.");
+                    }
                 }
             }
         }
 
-        public static function setMaintenance($classOrFunc) {
-            if (is_callable($classOrFunc) || is_array($classOrFunc)) {
-                self::$storage['maintenance'] = ['callback' => $classOrFunc];
+        public static function setMaintenance($callUserFunc) {
+            if (is_callable($callUserFunc) || is_array($callUserFunc)) {
+                self::$storage["maintenance"] = ["callback" => $callUserFunc];
+            } else {
+                throw new \InvalidArgumentException("Invalid maintenance callback provided.");
             }
         }
 
-        public static function set404($classOrFunc) {
-            if (is_callable($classOrFunc) || is_array($classOrFunc)) {
-                self::$storage['404'] = ['callback' => $classOrFunc];
+        public static function set404($callUserFunc) {
+            if (is_callable($callUserFunc) || is_array($callUserFunc)) {
+                self::$storage["404"] = ["callback" => $callUserFunc];
+            } else {
+                throw new \InvalidArgumentException("Invalid 404 callback provided.");
             }
         }
 
-        public static function group(array $attr, callable $callback) {
+        public static function group(array $attributes, callable $callback) {
             $previousPrefix = self::$prefix;
-            self::$prefix = $previousPrefix . ($attr['prefix'] ?? '');
-
+            self::$prefix .= $attributes['prefix'] ?? '';
+            self::$groupMiddleware = $attributes['middleware'] ?? [];
+    
             $callback();
-
+    
             self::$prefix = $previousPrefix;
+            self::$groupMiddleware = [];
         }
 
-        private static function applyPrefix(string $path): string {
-            return self::$prefix . $path;
+        private static function applyPrefix($path) {
+            return self::$prefix . '/' . ltrim($path, '/');
         }
 
-        public static function set(string $path, $classOrFunc, string $method = 'GET'): void {
+        private static function set($path, $callUserFunc, $method = "GET", $middleware = []) {
             $path = self::applyPrefix($path);
-            self::$storage['routes'][$path] = [
-                'callback' => $classOrFunc,
-                'method' => $method
+            self::$storage["routes"][$path] = [
+                'method' => $method,
+                'callback' => $callUserFunc,
+                'middleware' => array_merge(self::$groupMiddleware, $middleware)
             ];
         }
 
-        public static function get(string $path, $classOrFunc): void {
-            self::set($path, $classOrFunc, 'GET');
+        public static function get($path, $callUserFunc, $middleware = []) {
+            self::set($path, $callUserFunc, 'GET', $middleware);
         }
 
-        public static function post(string $path, $classOrFunc): void {
-            self::set($path, $classOrFunc, 'POST');
+        public static function post($path, $callUserFunc, $middleware = []) {
+            self::set($path, $callUserFunc, 'POST', $middleware);
         }
 
-        public static function put(string $path, $classOrFunc): void {
-            self::set($path, $classOrFunc, 'PUT');
+        public static function put($path, $callUserFunc, $middleware = []) {
+            self::set($path, $callUserFunc, 'PUT', $middleware);
         }
 
-        public static function delete(string $path, $classOrFunc): void {
-            self::set($path, $classOrFunc, 'DELETE');
+        public static function delete($path, $callUserFunc, $middleware = []) {
+            self::set($path, $callUserFunc, 'DELETE', $middleware);
         }
 
-        public static function patch(string $path, $classOrFunc): void {
-            self::set($path, $classOrFunc, 'PATCH');
+        public static function patch($path, $callUserFunc, $middleware = []) {
+            self::set($path, $callUserFunc, 'PATCH', $middleware);
         }
 
-        public static function options(string $path, $classOrFunc): void {
-            self::set($path, $classOrFunc, 'OPTIONS');
+        public static function options($path, $callUserFunc, $middleware = []) {
+            self::set($path, $callUserFunc, 'OPTIONS', $middleware);
         }
 
-        public static function run(): void {
-            RouteCollect::init(self::$storage, function($routes) {
-                RouteExec::exec($routes);
+        public static function run() {
+            Collect::init(self::$storage, function($routes) {
+                Execution::init($routes);
             });
         }
 
