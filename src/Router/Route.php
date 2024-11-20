@@ -14,7 +14,7 @@
         public static function register($root, array $list = []) {
             if (!empty($list)) {
                 foreach ($list as $val) {
-                    $filePath = $root . "/app/Routes" . $val . ".php";
+                    $filePath = rtrim($root, "/") . $val . ".php";
                     if (file_exists($filePath)) {
                         require $filePath;
                     } else {
