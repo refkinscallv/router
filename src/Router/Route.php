@@ -11,10 +11,10 @@
         private static $prefix = "";
         private static $groupMiddleware = [];
 
-        public static function register(array $list = []) {
+        public static function register($root, array $list = []) {
             if (!empty($list)) {
                 foreach ($list as $val) {
-                    $filePath = $_SERVER["DOCUMENT_ROOT"] . "/app/Routes" . $val . ".php";
+                    $filePath = $root . "/app/Routes" . $val . ".php";
                     if (file_exists($filePath)) {
                         require $filePath;
                     } else {
